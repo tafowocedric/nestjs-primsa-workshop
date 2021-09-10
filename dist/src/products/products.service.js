@@ -12,6 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const prisma_relay_cursor_connection_1 = require("@devoxa/prisma-relay-cursor-connection");
+const connection_args_dto_1 = require("../page/connection-args.dto");
+const product_entity_1 = require("./entities/product.entity");
+const page_dto_1 = require("../page/page.dto");
 let ProductsService = class ProductsService {
     constructor(prisma) {
         this.prisma = prisma;
@@ -21,6 +25,18 @@ let ProductsService = class ProductsService {
     }
     findAll() {
         return this.prisma.product.findMany({ where: { published: true } });
+    }
+    async findPage(connectionArgs) {
+        const where = { published: true };
+        const page = await (0, prisma_relay_cursor_connection_1.findManyCursorConnection)((args) => {
+            console.log(args);
+            return this.prisma.product.findMany(Object.assign(Object.assign({}, args), { where: where }));
+        }, () => this.prisma.product.count({ where: where }), connectionArgs, {
+            recordToEdge: (record) => ({
+                node: new product_entity_1.ProductEntity(record),
+            }),
+        });
+        return new page_dto_1.Page(page);
     }
     findDrafts() {
         return this.prisma.product.findMany({ where: { published: false } });

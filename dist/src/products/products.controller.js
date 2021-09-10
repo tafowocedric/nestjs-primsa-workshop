@@ -18,6 +18,7 @@ const products_service_1 = require("./products.service");
 const create_product_dto_1 = require("./dto/create-product.dto");
 const update_product_dto_1 = require("./dto/update-product.dto");
 const product_entity_1 = require("./entities/product.entity");
+const connection_args_dto_1 = require("../page/connection-args.dto");
 let ProductsController = class ProductsController {
     constructor(productsService) {
         this.productsService = productsService;
@@ -28,6 +29,9 @@ let ProductsController = class ProductsController {
     async findAll() {
         const products = await this.productsService.findAll();
         return products.map((product) => new product_entity_1.ProductEntity(product));
+    }
+    async findPage(connectionArgs) {
+        return this.productsService.findPage(connectionArgs);
     }
     async findDrafts() {
         const drafts = await this.productsService.findDrafts();
@@ -56,6 +60,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('page'),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [connection_args_dto_1.ConnectionArgsDto]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "findPage", null);
 __decorate([
     (0, common_1.Get)('drafts'),
     __metadata("design:type", Function),

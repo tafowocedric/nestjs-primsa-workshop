@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductEntity } from './entities/product.entity';
+import { ConnectionArgsDto } from 'src/page/connection-args.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -28,6 +30,11 @@ export class ProductsController {
     const products = await this.productsService.findAll();
 
     return products.map((product) => new ProductEntity(product));
+  }
+
+  @Get('page')
+  async findPage(@Query() connectionArgs: ConnectionArgsDto) {
+    return this.productsService.findPage(connectionArgs);
   }
 
   @Get('drafts')
