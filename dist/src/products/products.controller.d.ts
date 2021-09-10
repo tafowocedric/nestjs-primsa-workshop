@@ -5,7 +5,7 @@ import { ProductEntity } from './entities/product.entity';
 export declare class ProductsController {
     private readonly productsService;
     constructor(productsService: ProductsService);
-    create(createProductDto: CreateProductDto): import(".prisma/client").Prisma.Prisma__ProductClient<import(".prisma/client").Product>;
+    create(createProductDto: CreateProductDto): Promise<ProductEntity>;
     findAll(): Promise<ProductEntity[]>;
     findDrafts(): Promise<ProductEntity[]>;
     findOne(id: string): Promise<ProductEntity>;
